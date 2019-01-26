@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="EncoderDecoder.cpp" />
     <ClCompile Include="serverMain.cpp" />
+    <ClCompile Include="Packet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncoderDecoder.h" />

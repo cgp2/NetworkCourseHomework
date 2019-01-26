@@ -267,18 +267,16 @@ void OnClientConnected(IDPacket* packet, ConnectionData* conData)
 
 void OnClientDisconected(ConnectionData* clientConnectionData)
 {
-	for (UsersData* userData : CurrentUsers)
-	{
-		if (userData->UserConnectionData->socket == clientConnectionData->socket)
-		{
-			CurrentUsers.remove(userData);
-			cout << "Bye Bye " << userData->Name << "\n";
+	UsersData* user = FindUser(clientConnectionData);
+	if (user == nullptr)
+		return;
 
-			closesocket(clientConnectionData->socket);
+	for (ChannelData* userChannel : user->CurrentChannels)
+		LeaveChannel(userChannel, user);
 
-			return;
-		}
-	}
+	CurrentUsers.remove(user);
+	cout << "Bye Bye " << user->Name << "\n";
+	closesocket(clientConnectionData->socket);
 }
 
 void JoinChannel(ChannelData* channel, UsersData* user)

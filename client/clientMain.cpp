@@ -51,6 +51,8 @@ string UserName;
 list<string> CurrentChannels;
 UserStates CurrentState = Idle;
 
+string requestedChannel;
+
 
 
 void OnStateChanging(string commandName)
@@ -101,6 +103,12 @@ void OnStateChanging(string commandName)
 		{
 			cout << "Channel error\n";
 		}
+		else
+		{
+			CurrentChannels.push_back(requestedChannel);
+		}
+
+		requestedChannel = "";
 
 		CurrentState = Auth;
 		break;
@@ -201,15 +209,18 @@ void ParseUserCommand(string userCommand)
 		}
 		if (command == "CHANNELS")
 		{
-			RequestPacket* reqPacket = new RequestPacket;
-			reqPacket->requestFor = "Users";
-			SendPacket(reqPacket);
+			cout << "*******" << "User channels" << "*******\n";
+			for (string name : CurrentChannels)
+			{
+				cout << name << "\n";
+			}
 		}
 		if (command == "CH")
 		{
 			ChanelIDPacket* chidPacket = new ChanelIDPacket;
 			EncoderDecoder::SplitString(paramsString, ' ', chidPacket->Name, paramsString);
 
+			requestedChannel = chidPacket->Name;
 			OnStateChanging(command);
 
 			SendPacket(chidPacket);
